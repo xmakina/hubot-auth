@@ -39,10 +39,19 @@ module.exports = (robot) ->
     admins = []
 
   class Auth
+    constructor: (restructure) ->
+      if restructure
+        this.restructure = restructure
+
+    restructure: (user) -> 
+      user
+
     isAdmin: (user) ->
+      user = @restructure(user)
       user.id.toString() in admins
 
     hasRole: (user, roles) ->
+      user = @restructure(user)
       userRoles = @userRoles(user)
       if userRoles?
         roles = [roles] if typeof roles is 'string'
@@ -58,6 +67,7 @@ module.exports = (robot) ->
       users
 
     userRoles: (user) ->
+      user = @restructure(user)
       roles = []
       if user? and robot.auth.isAdmin user
         roles.push('admin')
